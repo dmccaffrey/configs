@@ -55,6 +55,9 @@ plugins=(git)
 
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 # export MANPATH="/usr/local/man:$MANPATH"
+# vmware specific paths
+#
+export PATH="$PATH:/mts/home2/dmccaffrey/local/bin:/build/apps/bin"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -82,7 +85,7 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias ec="emacs"
+alias ec="emacs-24.5"
 alias dbc="ssh pa-dbc1113.eng.vmware.com"
 alias dbcq="ssh pub-linux1.eng.vmware.com /build/apps/machines/bin/dbc-finduser"
 
@@ -94,5 +97,4 @@ then
 fi
 export SSH_AUTH_SOCK=$SSH_AUTH_SOCK_REDIRECT
 
-# vmware specific paths
-export PATH="$PATH:/mts/home2/dmccaffrey/local/bin:/build/apps/bin"
+
