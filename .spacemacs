@@ -160,6 +160,7 @@ layers configuration."
   (setq-default dotspacemacs-configuration-layers
                   '((c-c++ variables: c-c++-enable-clang-support t)))
   (global-linum-mode t)
+  (setq auto-mode-alist (cons '("\\.sc" . python-mode) auto-mode-alist))
 )
 
 
