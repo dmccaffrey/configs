@@ -92,6 +92,7 @@ alias dbc="ssh pa-dbc1113.eng.vmware.com"
 alias dbcq="ssh pub-linux1.eng.vmware.com /build/apps/machines/bin/dbc-finduser"
 alias j="pushd"
 alias r="popd"
+alias psu="ps U $USER"
 
 # fix ssh auth agent socket for tmux
 SSH_AUTH_SOCK_REDIRECT=~/.ssh/agent.sock
