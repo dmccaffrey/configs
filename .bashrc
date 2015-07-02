@@ -1,3 +1,5 @@
+export PATH="$PATH:/mts/home2/dmccaffrey/local/bin:/build/apps/bin"
+
 # Run zsh
 if [[ -n $PS1 ]]; then
     : # Interactive Only
