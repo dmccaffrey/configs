@@ -29,6 +29,14 @@
      python
      c-c++
      themes-megapack
+     markdown
+     auto-completion
+     syntax-checking
+     elixer
+     git
+     org
+     company-mode
+     perspectives
      )
    ;; List of additional packages that will be installed wihout being
    ;; wrapped in a layer. If you need some configuration for these
@@ -107,7 +115,7 @@ before layers configuration."
    ;; If non nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil ;; to boost the loading time.
-   dotspacemacs-loading-progress-bar t
+   dotspacemacs-loading-progress-bar nil
    ;; If non nil the frame is fullscreen when Emacs starts up.
    ;; (Emacs 24.4+ only)
    dotspacemacs-fullscreen-at-startup nil
@@ -160,6 +168,8 @@ layers configuration."
   (setq-default dotspacemacs-configuration-layers
                   '((c-c++ variables: c-c++-enable-clang-support t)))
   (global-linum-mode t)
+  (setq auto-mode-alist (cons '("\\.sc" . python-mode) auto-mode-alist))
+  (add-hook 'alchemist-mode-hook 'company-mode)
 )
 
 
