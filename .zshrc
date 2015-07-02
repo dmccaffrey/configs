@@ -82,7 +82,8 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias ec="emacs"
+alias ec="emacsclient"
+alias psu="ps U $USER"
 
 # fix ssh auth agent socket for tmux
 SSH_AUTH_SOCK_REDIRECT=~/.ssh/agent.sock
