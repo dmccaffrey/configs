@@ -57,7 +57,7 @@ export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 # export MANPATH="/usr/local/man:$MANPATH"
 # vmware specific paths
 #
-export PATH="$PATH:/mts/home2/dmccaffrey/work/local/bin:/build/apps/bin"
+export PATH="/mts/home2/dmccaffrey/work/tools/bin:/build/apps/bin:$PATH"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -86,13 +86,14 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias emacs="emacs-24.5"
-alias ec="emacsclient"
+alias ec="emacsclient --alternate-editor='' -c"
 alias resume="emacsclient -c"
 alias dbc="ssh pa-dbc1113.eng.vmware.com"
 alias dbcq="ssh pub-linux1.eng.vmware.com /build/apps/machines/bin/dbc-finduser"
 alias j="pushd"
 alias r="popd"
 alias psu="ps U $USER"
+alias exit="pkill emacs && exit"
 
 # fix ssh auth agent socket for tmux
 SSH_AUTH_SOCK_REDIRECT=~/.ssh/agent.sock
@@ -101,3 +102,5 @@ then
     ln -sFf $SSH_AUTH_SOCK $SSH_AUTH_SOCK_REDIRECT
 fi
 export SSH_AUTH_SOCK=$SSH_AUTH_SOCK_REDIRECT
+
+# for emacs server
