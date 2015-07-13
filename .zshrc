@@ -57,7 +57,7 @@ export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 # export MANPATH="/usr/local/man:$MANPATH"
 # vmware specific paths
 #
-export PATH="$PATH:/mts/home2/dmccaffrey/local/bin:/build/apps/bin"
+export PATH="$PATH:/mts/home2/dmccaffrey/work/local/bin:/build/apps/bin"
 
 source $ZSH/oh-my-zsh.sh
 
