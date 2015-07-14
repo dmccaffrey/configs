@@ -37,6 +37,7 @@
      org
      company-mode
      perspectives
+     shell
      )
    ;; List of additional packages that will be installed wihout being
    ;; wrapped in a layer. If you need some configuration for these
@@ -111,7 +112,7 @@ before layers configuration."
    dotspacemacs-enable-paste-micro-state nil
    ;; Guide-key delay in seconds. The Guide-key is the popup buffer listing
    ;; the commands bound to the current keystrokes.
-   dotspacemacs-guide-key-delay nil
+   dotspacemacs-guide-key-delay 0.2
    ;; If non nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil ;; to boost the loading time.
@@ -170,6 +171,7 @@ layers configuration."
   (global-linum-mode t)
   (setq auto-mode-alist (cons '("\\.sc" . python-mode) auto-mode-alist))
   (add-hook 'alchemist-mode-hook 'company-mode)
+  (setq linum-format "%4d\u252B")
 )
 
 
