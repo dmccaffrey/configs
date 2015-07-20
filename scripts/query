@@ -1,0 +1,8 @@
+#!/bin/zsh
+case $1 in
+    vim-stable )
+        curl -s https://devhub.eng.vmware.com/api/cat/latestStableCln | jq '.catRecommendedCLN | .["vim-main"] | .["vim-cat"]'
+        ;;
+    changes )
+        ;;
+esac
