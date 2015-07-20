@@ -103,4 +103,7 @@ then
 fi
 export SSH_AUTH_SOCK=$SSH_AUTH_SOCK_REDIRECT
 
-# for emacs server
+# If we're already on a DBC machine, prevent dbc from double firing
+if [ -d /dbc/`hostname -s`/ ]; then
+    export DBC_ENV=1
+fi
