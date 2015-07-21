@@ -23,4 +23,15 @@ case $1 in
             echo ob-$(curl -s "http://buildapi.eng.vmware.com/ob/build/?changeset=$CHANGESET" | jq '._list[0].id')
         fi
         ;;
+
+    nimbus )
+        nimbus-ctl --testbed list
+        ;;
+
+    nimbus-vc )
+        query nimbus | grep "\.vc\.0" | awk '{print $3}'
+        ;;
+
+    nimbus-vc-ip )
+        nimbus-ctl ip $(query nimbus-vc) | grep "\.vc\.0" | awk '{print $3}' 
 esac

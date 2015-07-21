@@ -1,15 +1,18 @@
 #!/bin/zsh
 case $1 in
    run-tests )
-      svs submit -n -c $2
-      ;;
+       svs submit -n -c $2
+       ;;
    submit )
-      svs commit -c $2
-      ;;
+       svs commit -c $2
+       ;;
    size-diff )
-      vpxd-size $2 $3
-      ;;
+       vpxd-size $2 $3
+       ;;
+   update-vc )
+       load-vc -I $(query nimbus-vc-ip) --symlink-only -i -p vmware
+       ;;
    deploy )
-      test-vpx --vc-build=$(query vc-build $2) --esx-build=$(query esx-build $3) --num-esx-hosts=2 --deploy-only
-      ;;
+       test-vpx --vc-build=$(query vc-build $2) --esx-build=$(query esx-build $3) --num-esx-hosts=2 --deploy-only
+       ;;
 esac
