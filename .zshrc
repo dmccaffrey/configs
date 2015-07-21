@@ -52,12 +52,15 @@ ZSH_THEME="gallois"
 plugins=(git)
 
 # User configuration
+export WORKD=/dbc/pa-dbc1113/dmccaffrey
+export CODED=$WORKD/code
+export BORAD=$CODED/bora
 
 export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 # export MANPATH="/usr/local/man:$MANPATH"
 # vmware specific paths
 #
-export PATH="/mts/home2/dmccaffrey/work/tools/bin:/build/apps/bin:/dbc/pa-dbc1113/dmccaffrey/code/bora/support/scripts:$PATH"
+export PATH="$WORKD/tools/bin:/build/apps/bin:$BORAD/support/scripts:/mts/git/bin:$BORAD/vpx/tests:$PATH"
 
 source $ZSH/oh-my-zsh.sh
 
