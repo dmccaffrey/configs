@@ -3,6 +3,24 @@ case $1 in
     vim-stable )
         curl -s https://devhub.eng.vmware.com/api/cat/latestStableCln | jq '.catRecommendedCLN | .["vim-main"] | .["vim-cat"]'
         ;;
+
     changes )
+        ;;
+
+    vc-build )
+        #curl -sL 'https://devhub.eng.vmware.com/api/batRecommendation?branchId=170&days=1' | jq '.bat_result[] | select(.verdict == "recommended")'
+        if [ -z "$2" ]; then
+            echo ob-$(curl -s "http://buildapi.eng.vmware.com/ob/build/?product=vcenter&branch=vim-main&buildstate=succeeded&_order_by=-changeset,-id&_limit=1" | jq '._list[0].id')
+        else
+            echo ob-$(curl -s "http://buildapi.eng.vmware.com/ob/build/?changeset=$CHANGESET" | jq '._list[0].id')
+        fi
+        ;;
+
+    esx-build )
+        if [ -z "$2" ]; then
+            echo ob-$(curl -s "http://buildapi.eng.vmware.com/ob/build/?product=server&branch=vim-main&buildstate=succeeded&_order_by=-changeset,-id&_limit=1" | jq '._list[0].id')
+        else
+            echo ob-$(curl -s "http://buildapi.eng.vmware.com/ob/build/?changeset=$CHANGESET" | jq '._list[0].id')
+        fi
         ;;
 esac

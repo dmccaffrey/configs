@@ -1,0 +1,15 @@
+#!/bin/zsh
+case $1 in
+   run-tests )
+      svs submit -n -c $2
+      ;;
+   submit )
+      svs commit -c $2
+      ;;
+   size-diff )
+      vpxd-size $2 $3
+      ;;
+   deploy )
+      echo --vc-build=$(query vc-build $2) --esx-build=$(query esx-build $3) --deploy-only
+      ;;
+esac
