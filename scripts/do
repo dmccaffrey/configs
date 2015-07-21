@@ -10,6 +10,6 @@ case $1 in
       vpxd-size $2 $3
       ;;
    deploy )
-      test-vpx --vc-build=$(query vc-build $2) --esx-build=$(query esx-build $3) --deploy-only
+      test-vpx --vc-build=$(query vc-build $2) --esx-build=$(query esx-build $3) --num-esx-hosts=2 --deploy-only
       ;;
 esac
