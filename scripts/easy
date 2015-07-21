@@ -42,4 +42,13 @@ case $1 in
        # Creates an SSH session into the esx instance
        # param 2: The Id number of the esx server (optional)
        ssh root\@$(query nimbus-esx-ip $2)
+       ;;
+
+   update-cl )
+       # Updates the changelist with size-diff and other info
+       ;;
+
+   pr )
+       # Generates a review board post with all of the correct information filled in
+       ;;
 esac
