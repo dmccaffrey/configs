@@ -1,6 +1,7 @@
 #!/bin/zsh
 case $1 in
     vim-stable )
+        # Gets the Id for the current stable vim-main build
         curl -s https://devhub.eng.vmware.com/api/cat/latestStableCln | jq '.catRecommendedCLN | .["vim-main"] | .["vim-cat"]'
         ;;
 
@@ -8,6 +9,8 @@ case $1 in
         ;;
 
     vc-build )
+        # Gets a build Id for vcenter
+        # param 2: The changeset Id for the vceneter build (defaults to the latest stable)
         #curl -sL 'https://devhub.eng.vmware.com/api/batRecommendation?branchId=170&days=1' | jq '.bat_result[] | select(.verdict == "recommended")'
         if [ -z "$2" ]; then
             echo ob-$(curl -s "http://buildapi.eng.vmware.com/ob/build/?product=vcenter&branch=vim-main&buildstate=succeeded&_order_by=-changeset,-id&_limit=1" | jq '._list[0].id')
@@ -17,6 +20,8 @@ case $1 in
         ;;
 
     esx-build )
+        # Gets a build Id for ESX
+        # param 2: The changeset Id for the esx build (defaults to latest stable)
         if [ -z "$2" ]; then
             echo ob-$(curl -s "http://buildapi.eng.vmware.com/ob/build/?product=server&branch=vim-main&buildstate=succeeded&_order_by=-changeset,-id&_limit=1" | jq '._list[0].id')
         else
@@ -25,13 +30,51 @@ case $1 in
         ;;
 
     nimbus )
+        # Lists nimbus instances
         nimbus-ctl --testbed list
         ;;
 
     nimbus-vc )
-        query nimbus | grep "\.vc\.0" | awk '{print $3}'
+        # Gets the Id of the selected nimbus vceneter instance
+        # param 2: The id number of the vcenter server (defaults to 0)
+        if [ -z "$2" ]; then
+            ID=0
+        else
+            ID=$2
+        fi
+        query nimbus | grep "\.vc\.$ID" | awk '{print $3}'
+        ;;
+
+    nimbus-esx )
+        # Gets the Id of the selected nimbus esx instance
+        # param 2: The id number of the esx server (defaults to 0)
+        if [ -z "$2" ]; then
+            ID=0
+        else
+            ID=$2
+        fi
+        query nimbus | grep "\.esx\.$ID" | awk '{print $3}'
         ;;
 
     nimbus-vc-ip )
-        nimbus-ctl ip $(query nimbus-vc) | grep "\.vc\.0" | awk '{print $3}' 
+        # Gets the IP of the nimbus vcenter instance
+        # param 2: The Id number of the vcenter server
+        if [ -z "$2" ]; then
+            ID=0
+        else
+            ID=$2
+        fi
+        nimbus-ctl ip $(query nimbus-vc $ID) | grep "\.vc\.$ID" | awk '{print $3}' 
+        ;;
+
+    nimbus-esx-ip )
+        # Gets the IP of the nimbus esx server instance
+        # param 2: The Id number of the esx server
+        if [ -z "$2" ]; then
+            ID=0
+        else
+            ID=$2
+        fi
+        nimbus-ctl ip $(query nimbus-esx $ID) | grep "\.esx\.$ID" | awk '{print $3}' 
+        ;;
 esac

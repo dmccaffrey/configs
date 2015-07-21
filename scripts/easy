@@ -1,18 +1,45 @@
 #!/bin/zsh
 case $1 in
-   run-tests )
+    run-tests )
+       # Runs the standard SVS tests
+       # param 2: The changeset Id
        svs submit -n -c $2
        ;;
-   submit )
+
+    submit )
+       # Runs the standard SVS tests and commits the changes
+       # param 2: The changeset Id
        svs commit -c $2
        ;;
-   size-diff )
+
+    size-diff )
+       # Gets the difference in executable size for the given changes
+       # param 2: The starting changeset Id
+       # param 3: The ending changeset Id
        vpxd-size $2 $3
        ;;
-   update-vc )
-       load-vc -I $(query nimbus-vc-ip) --symlink-only -i -p vmware
+
+    update-vc )
+       # Loads the deployed vcenter server with the local build
+       # param 2: The Id of the vcenter instance to update (optional)
+       load-vc -I $(query nimbus-vc-ip $2) --symlink-only -i -p vmware
        ;;
-   deploy )
+
+    deploy )
+       # Deploys 1 vcenter instance and 2 esx instances into nimbus
+       # param 2: The changelist Id for vcenter (optional)
+       # param 3: The changelist Id for esx (optional)
        test-vpx --vc-build=$(query vc-build $2) --esx-build=$(query esx-build $3) --num-esx-hosts=2 --deploy-only
        ;;
+
+   ssh-vc )
+       # Creates an SSH session into the vceneter instance
+       # param 2: The Id number of the esx server (optional)
+       ssh root\@$(query nimbus-vc-ip $2)
+       ;;
+
+   ssh-esx )
+       # Creates an SSH session into the esx instance
+       # param 2: The Id number of the esx server (optional)
+       ssh root\@$(query nimbus-esx-ip $2)
 esac
