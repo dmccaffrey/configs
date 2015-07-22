@@ -1,80 +1,124 @@
 #!/bin/zsh
 case $1 in
-    vim-stable )
-        # Gets the Id for the current stable vim-main build
-        curl -s https://devhub.eng.vmware.com/api/cat/latestStableCln | jq '.catRecommendedCLN | .["vim-main"] | .["vim-cat"]'
+    changeset )
+        case $2 in
+            vim-stable )
+                # Gets the Id for the current stable vim-main build
+                curl -s https://devhub.eng.vmware.com/api/cat/latestStableCln | jq '.catRecommendedCLN | .["vim-main"] | .["vim-cat"]'
+                ;;
+
+            all )
+                ;;
+        esac
         ;;
 
-    changes )
+    build )
+        case $2 in
+            vc )
+                # Gets a build Id for vcenter
+                # param 3: The changeset Id for the vceneter build (defaults to the latest stable)
+                URL="http://buildapi.eng.vmware.com/ob/build/?product=vcenter&branch=vim-main&buildstate=succeeded&_order_by=-changeset,-id&_limit=1"
+                if [ -n "$3" ]; then
+                    if [ "$3" = "vim-stable" ]; then
+                        CSET=$(query changeset vim-stable)
+                    else
+                        CSET=$3
+                    fi
+                    URL="$URL&changeset=$CSET"
+                fi
+                RES=$(curl -s $URL | jq '._list[0].id')
+                if [ $RES != "null" ]; then
+                    echo ob-$RES
+                else
+                    exit 1
+                fi
+                ;;
+
+            esx )
+                # Gets a build Id for ESX
+                # param 3: The changeset Id for the esx build (defaults to latest stable)
+                URL="http://buildapi.eng.vmware.com/ob/build/?product=server&branch=vim-main&buildstate=succeeded&_order_by=-changeset,-id&_limit=1"
+                if [ -n "$3" ]; then
+                    if [ "$3" = "vim-stable" ]; then
+                        CSET=$(query changeset vim-stable)
+                    else
+                        CSET=$3
+                    fi
+                    URL="$URL&changeset=$CSET"
+                fi
+                RES=$(curl -s $URL | jq '._list[0].id')
+                if [ $RES != "null" ]; then
+                    echo ob-$RES
+                else
+                    exit 1
+                fi
+                ;;
+        esac
         ;;
 
-    vc-build )
-        # Gets a build Id for vcenter
-        # param 2: The changeset Id for the vceneter build (defaults to the latest stable)
-        #curl -sL 'https://devhub.eng.vmware.com/api/batRecommendation?branchId=170&days=1' | jq '.bat_result[] | select(.verdict == "recommended")'
-        if [ -z "$2" ]; then
-            echo ob-$(curl -s "http://buildapi.eng.vmware.com/ob/build/?product=vcenter&branch=vim-main&buildstate=succeeded&_order_by=-changeset,-id&_limit=1" | jq '._list[0].id')
-        else
-            echo ob-$(curl -s "http://buildapi.eng.vmware.com/ob/build/?changeset=$CHANGESET" | jq '._list[0].id')
-        fi
+    nimbus)
+        case $2 in
+            list )
+                # Lists nimbus instances
+                nimbus-ctl --testbed list
+                ;;
+
+            id )
+                case $3 in
+                    vc )
+                        # Gets the Id of the selected nimbus vceneter instance
+                        # param 4: The id number of the vcenter server (defaults to 0)
+                        if [ -z "$4" ]; then
+                            ID=0
+                        else
+                            ID=$4
+                        fi
+                        query nimbus | grep "\.vc\.$ID" | awk '{print $3}'
+                        ;;
+
+                    esx )
+                        # Gets the Id of the selected nimbus esx instance
+                        # param 4: The id number of the esx server (defaults to 0)
+                        if [ -z "$4" ]; then
+                            ID=0
+                        else
+                            ID=$4
+                        fi
+                        query nimbus | grep "\.esx\.$ID" | awk '{print $3}'
+                        ;;
+                esac
+                ;;
+
+            ip )
+                case $3 in
+                    vc )
+                        # Gets the IP of the nimbus vcenter instance
+                        # param 4: The Id number of the vcenter server
+                        if [ -z "$4" ]; then
+                            ID=0
+                        else
+                            ID=$4
+                        fi
+                        nimbus-ctl ip $(query nimbus-vc $ID) | grep "\.vc\.$ID" | awk '{print $3}' 
+                        ;;
+
+                    esx )
+                        # Gets the IP of the nimbus esx server instance
+                        # param 4: The Id number of the esx server
+                        if [ -z "$4" ]; then
+                            ID=0
+                        else
+                            ID=$4
+                        fi
+                        nimbus-ctl ip $(query nimbus-esx $ID) | grep "\.esx\.$ID" | awk '{print $3}' 
+                        ;;
+                esac
+                ;;
+        esac
         ;;
 
-    esx-build )
-        # Gets a build Id for ESX
-        # param 2: The changeset Id for the esx build (defaults to latest stable)
-        if [ -z "$2" ]; then
-            echo ob-$(curl -s "http://buildapi.eng.vmware.com/ob/build/?product=server&branch=vim-main&buildstate=succeeded&_order_by=-changeset,-id&_limit=1" | jq '._list[0].id')
-        else
-            echo ob-$(curl -s "http://buildapi.eng.vmware.com/ob/build/?changeset=$CHANGESET" | jq '._list[0].id')
-        fi
-        ;;
-
-    nimbus )
-        # Lists nimbus instances
-        nimbus-ctl --testbed list
-        ;;
-
-    nimbus-vc )
-        # Gets the Id of the selected nimbus vceneter instance
-        # param 2: The id number of the vcenter server (defaults to 0)
-        if [ -z "$2" ]; then
-            ID=0
-        else
-            ID=$2
-        fi
-        query nimbus | grep "\.vc\.$ID" | awk '{print $3}'
-        ;;
-
-    nimbus-esx )
-        # Gets the Id of the selected nimbus esx instance
-        # param 2: The id number of the esx server (defaults to 0)
-        if [ -z "$2" ]; then
-            ID=0
-        else
-            ID=$2
-        fi
-        query nimbus | grep "\.esx\.$ID" | awk '{print $3}'
-        ;;
-
-    nimbus-vc-ip )
-        # Gets the IP of the nimbus vcenter instance
-        # param 2: The Id number of the vcenter server
-        if [ -z "$2" ]; then
-            ID=0
-        else
-            ID=$2
-        fi
-        nimbus-ctl ip $(query nimbus-vc $ID) | grep "\.vc\.$ID" | awk '{print $3}' 
-        ;;
-
-    nimbus-esx-ip )
-        # Gets the IP of the nimbus esx server instance
-        # param 2: The Id number of the esx server
-        if [ -z "$2" ]; then
-            ID=0
-        else
-            ID=$2
-        fi
-        nimbus-ctl ip $(query nimbus-esx $ID) | grep "\.esx\.$ID" | awk '{print $3}' 
+    p4-latest)
+        # Get the latest submitted change
+        p4 changes -s submitted -m1
         ;;
 esac

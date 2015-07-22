@@ -1,54 +1,76 @@
 #!/bin/zsh
 case $1 in
-    run-tests )
-       # Runs the standard SVS tests
-       # param 2: The changeset Id
-       svs submit -n -c $2
-       ;;
+    svs )
+        case $2 in
+            test )
+                # Runs the standard SVS tests
+                # param 2: The changeset Id
+                svs submit -n -c $2
+                ;;
 
-    submit )
-       # Runs the standard SVS tests and commits the changes
-       # param 2: The changeset Id
-       svs commit -c $2
-       ;;
+            submit )
+                # Runs the standard SVS tests and commits the changes
+                # param 2: The changeset Id
+                svs commit -c $2
+                ;;
+        esac
+        ;;
 
-    size-diff )
-       # Gets the difference in executable size for the given changes
-       # param 2: The starting changeset Id
-       # param 3: The ending changeset Id
-       vpxd-size $2 $3
-       ;;
+    nimbus )
+        case $2 in
+            deploy )
+                # Deploys 1 vcenter instance and 2 esx instances into nimbus
+                # param 3: The changelist Id for vcenter (optional)
+                # param 4: The changelist Id for esx (optional)
+                test-vpx --vc-build=$(query build vc $3) --esx-build=$(query build vc $4) --num-esx-hosts=2 --deploy-only
+                ;;
 
-    update-vc )
-       # Loads the deployed vcenter server with the local build
-       # param 2: The Id of the vcenter instance to update (optional)
-       load-vc -I $(query nimbus-vc-ip $2) --symlink-only -i -p vmware
-       ;;
+            load-vc )
+                # Loads the deployed vcenter server with the local build
+                # param 3: The Id of the vcenter instance to update (optional)
+                load-vc -I $(query nimbus ip vc $3) -i -p vmware
+                ;;
 
-    deploy )
-       # Deploys 1 vcenter instance and 2 esx instances into nimbus
-       # param 2: The changelist Id for vcenter (optional)
-       # param 3: The changelist Id for esx (optional)
-       test-vpx --vc-build=$(query vc-build $2) --esx-build=$(query esx-build $3) --num-esx-hosts=2 --deploy-only
-       ;;
+            fix-vc )
+                # Repairs the vc db so that load-vc can be run again
+                # param 3: The Id of the vcenter instance to update (optional)
+                ssh root@$(query nimbus ip vc $3) -e "/usr/sbin/vpxd -b"
+                ;;
 
-   ssh-vc )
-       # Creates an SSH session into the vceneter instance
-       # param 2: The Id number of the esx server (optional)
-       ssh root\@$(query nimbus-vc-ip $2)
-       ;;
+            ssh )
+                case $3 in
+                    vc )
+                        # Creates an SSH session into the vceneter instance
+                        # param 4: The Id number of the esx server (optional)
+                        ssh root@$(query nimbus ip vc $4)
+                        ;;
 
-   ssh-esx )
-       # Creates an SSH session into the esx instance
-       # param 2: The Id number of the esx server (optional)
-       ssh root\@$(query nimbus-esx-ip $2)
-       ;;
+                    esx )
+                        # Creates an SSH session into the esx instance
+                        # param 4: The Id number of the esx server (optional)
+                        ssh root@$(query nimbus ip esx $4)
+                        ;;
+                esac
+                ;;
+        esac
+        ;;
 
-   update-cl )
-       # Updates the changelist with size-diff and other info
-       ;;
+    pr )
+        case $2 in
+            size-diff )
+                # Gets the difference in executable size for the given changes
+                # param 3: The starting changeset Id
+                # param 4: The ending changeset Id
+                vpxd-size $3 $4
+                ;;
 
-   pr )
-       # Generates a review board post with all of the correct information filled in
-       ;;
+            update-cl )
+                # Updates the changelist with size-diff and other info
+                ;;
+
+            pr )
+                # Generates a review board post with all of the correct information filled in
+                ;;
+        esac
+        ;;
 esac
