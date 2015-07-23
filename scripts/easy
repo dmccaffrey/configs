@@ -41,8 +41,18 @@ case $1 in
                         # Deploys 1 vcenter instance and 2 esx instances into nimbus
                         # param 4: The build Id for vcenter
                         # param 5: The build Id for esx
+                        if [ $4 != "ob-"* ]; then
+                            VC_BUILD="ob-$4"
+                        else
+                            VC_BUILD=$4
+                        fi
+                        if [ $5 != "ob-"* ]; then
+                            ESX_BUILD="ob-$5"
+                        else
+                            ESX_BUILD=$5
+                        fi
                         echo "Running with vc=$4 esx=$5"
-                        test-vpx --vc-build=$4 --esx-build=$5 --num-esx-hosts=2 --deploy-only
+                        test-vpx --vc-build=$VC_BUILD --vc-user=root --vc-pwd=pass --esx-build=$ESX_BUILD --esx-user=root --esx-pwd=pass --num-esx-hosts=2 --deploy-only
                         ;;
 
                     * )
