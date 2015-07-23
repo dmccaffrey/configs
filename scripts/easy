@@ -23,10 +23,28 @@ case $1 in
     nimbus )
         case $2 in
             deploy )
-                # Deploys 1 vcenter instance and 2 esx instances into nimbus
-                # param 3: The changelist Id for vcenter (optional)
-                # param 4: The changelist Id for esx (optional)
-                test-vpx --vc-build=$(query build vc $3) --esx-build=$(query build vc $4) --num-esx-hosts=2 --deploy-only
+                case $3 in
+                    changes )
+                        # Deploys 1 vcenter instance and 2 esx instances into nimbus
+                        # param 3: The changelist Id for vcenter (optional)
+                        # param 4: The changelist Id for esx (optional)
+                        VC_BUILD=$(query build vc $3)
+                        ESX_BUILD=$(query build esx $4)
+                        easy nimbus deploy builds $VC_BUILD $ESX_BUILD
+                        ;;
+
+                    builds )
+                        # Deploys 1 vcenter instance and 2 esx instances into nimbus
+                        # param 3: The build Id for vcenter
+                        # param 4: The build Id for esx
+                        echo "Running with vc=$VC_BUILD esx=$ESX_BUILD"
+                        test-vpx --vc-build=$3 --esx-build=$4 --num-esx-hosts=2 --deploy-only
+                        ;;
+
+                    * )
+                        echo "Options: changes, builds"
+                        ;;
+                esac
                 ;;
 
             load-vc )
@@ -60,6 +78,12 @@ case $1 in
                         ;;
                 esac
                 ;;
+
+            killall )
+                # Kills the current nimbus testbed
+                nimbus-ctl --testbed kill $(query nimbus testbed)
+                ;;
+
 
             help )
                 echo "Options: deploy, load-vc, fix-vc, ssh"
