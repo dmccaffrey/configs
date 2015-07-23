@@ -13,6 +13,10 @@ case $1 in
                 # param 2: The changeset Id
                 svs commit -c $2
                 ;;
+
+            help )
+                echo "Options: test, submit"
+                ;;
         esac
         ;;
 
@@ -50,12 +54,20 @@ case $1 in
                         # param 4: The Id number of the esx server (optional)
                         ssh root@$(query nimbus ip esx $4)
                         ;;
+
+                    help )
+                        echo "Options: vc, esx"
+                        ;;
                 esac
+                ;;
+
+            help )
+                echo "Options: deploy, load-vc, fix-vc, ssh"
                 ;;
         esac
         ;;
 
-    pr )
+    review )
         case $2 in
             size-diff )
                 # Gets the difference in executable size for the given changes
@@ -68,9 +80,18 @@ case $1 in
                 # Updates the changelist with size-diff and other info
                 ;;
 
-            pr )
+            post )
                 # Generates a review board post with all of the correct information filled in
+                ;;
+
+            help )
+                echo "Options size-diff, update-cl, post"
                 ;;
         esac
         ;;
+
+    * )
+       # Invalid argument
+       echo "Help: please choose svs, nimbus, or review"
+       ;;
 esac
