@@ -24,21 +24,25 @@ case $1 in
         case $2 in
             deploy )
                 case $3 in
+                    latest )
+                        easy nimbus deploy changes
+                        ;;
+
                     changes )
                         # Deploys 1 vcenter instance and 2 esx instances into nimbus
-                        # param 3: The changelist Id for vcenter (optional)
-                        # param 4: The changelist Id for esx (optional)
-                        VC_BUILD=$(query build vc $3)
-                        ESX_BUILD=$(query build esx $4)
+                        # param 4: The changelist Id for vcenter (optional)
+                        # param 5: The changelist Id for esx (optional)
+                        VC_BUILD=$(query build vc $4)
+                        ESX_BUILD=$(query build esx $5)
                         easy nimbus deploy builds $VC_BUILD $ESX_BUILD
                         ;;
 
                     builds )
                         # Deploys 1 vcenter instance and 2 esx instances into nimbus
-                        # param 3: The build Id for vcenter
-                        # param 4: The build Id for esx
-                        echo "Running with vc=$VC_BUILD esx=$ESX_BUILD"
-                        test-vpx --vc-build=$3 --esx-build=$4 --num-esx-hosts=2 --deploy-only
+                        # param 4: The build Id for vcenter
+                        # param 5: The build Id for esx
+                        echo "Running with vc=$4 esx=$5"
+                        test-vpx --vc-build=$4 --esx-build=$5 --num-esx-hosts=2 --deploy-only
                         ;;
 
                     * )
