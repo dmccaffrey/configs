@@ -52,7 +52,8 @@ case $1 in
                             ESX_BUILD="ob-$5"
                         fi
                         echo "Running with vc=$4 esx=$5"
-                        test-vpx --vc-build=$VC_BUILD --vc-user=root --vc-pwd=pass --esx-build=$ESX_BUILD --esx-user=root --esx-pwd=pass --num-esx-hosts=2 --deploy-only
+                        #test-vpx --vc-build=$VC_BUILD --vc-user=root --vc-pwd=pass --esx-build=$ESX_BUILD --esx-user=root --esx-pwd=pass --num-esx-hosts=2 --deploy-only
+                        test-vpx --vc-build=$VC_BUILD --esx-build=$ESX_BUILD --num-esx-hosts=2 --deploy-only
                         ;;
 
                     * )

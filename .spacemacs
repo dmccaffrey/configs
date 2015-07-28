@@ -38,6 +38,7 @@
      company-mode
      perspectives
      shell
+     cscope
      )
    ;; List of additional packages that will be installed wihout being
    ;; wrapped in a layer. If you need some configuration for these
@@ -173,8 +174,14 @@ layers configuration."
   (add-hook 'alchemist-mode-hook 'company-mode)
   (setq linum-format "%4d\u2506")
   (setq-default indent-tabs-mode nil)
-  (setq tab-width 3)
-  (defvaralias 'c-basic-offset 'tab-width)
+  (setq-default tab-stop-list (number-sequence 3 90 3))
+  (setq-default tab-width 3)
+  (setq-default default-tab-width 3)
+  (setq c-default-style "linux"
+        c-basic-offset 3)
+  (setq-default indent-line-function 'insert-tab)
+  (add-hook 'python-mode-hook 'setq tab-width 4)
+  (add-hook 'sh-mode-hook 'setq tab-width 4)
 )
 
 

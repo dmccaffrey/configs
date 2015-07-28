@@ -60,7 +60,7 @@ case $1 in
         case $2 in
             list )
                 # Lists nimbus instances
-                nimbus-ctl --testbed list
+                nimbus-ctl --testbed ip
                 ;;
 
             testbed )
@@ -79,7 +79,7 @@ case $1 in
                         else
                             ID=$4
                         fi
-                        query nimbus | grep "\.vc\.$ID" | awk '{print $3}'
+                        query nimbus list | grep "\.vc\.$ID" | awk '{print $3}'
                         ;;
 
                     esx )
@@ -90,7 +90,7 @@ case $1 in
                         else
                             ID=$4
                         fi
-                        query nimbus | grep "\.esx\.$ID" | awk '{print $3}'
+                        query nimbus list | grep "\.esx\.$ID" | awk '{print $3}'
                         ;;
                 esac
                 ;;
@@ -105,7 +105,7 @@ case $1 in
                         else
                             ID=$4
                         fi
-                        nimbus-ctl ip $(query nimbus-vc $ID) | grep "\.vc\.$ID" | awk '{print $3}' 
+                        nimbus-ctl ip $(query nimbus id vc $ID) | grep "\.vc\.$ID" | awk '{print $3}' 
                         ;;
 
                     esx )
@@ -116,7 +116,7 @@ case $1 in
                         else
                             ID=$4
                         fi
-                        nimbus-ctl ip $(query nimbus-esx $ID) | grep "\.esx\.$ID" | awk '{print $3}' 
+                        nimbus-ctl ip $(query nimbus id esx $ID) | grep "\.esx\.$ID" | awk '{print $3}' 
                         ;;
                 esac
                 ;;
