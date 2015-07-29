@@ -64,11 +64,27 @@ case $1 in
                 ;;
 
             snapshot )
-                nimbus-ctl -I -h easy-snapshot -m $(query nimbus podname) create-snapshot $3
+                if [ -z "$3" ]; then
+                    IDS=($(query nimbus id vc) $(query nimbus id esx 0) $(query nimbus id esx 1))
+                    for ID in $IDS; do
+                        echo "Creating snapshot for $ID"
+                        nimbus-ctl -I -h easy-snapshot -m $(query nimbus podname) create-snapshot $ID
+                    done
+                else
+                    nimbus-ctl -I -h easy-snapshot -m $(query nimbus podname) create-snapshot $3
+                fi
                 ;;
 
             revert )
-                nimbus-ctl -I -h easy-snapshot -m $(query nimbus podname) revert-snapshot $3
+                if [ -z "$3" ]; then
+                    IDS=($(query nimbus id vc) $(query nimbus id esx 0) $(query nimbus id esx 1))
+                    for ID in $IDS; do
+                        echo "Reverting snapshot for $ID"
+                        nimbus-ctl -I -h easy-snapshot -m $(query nimbus podname) create-snapshot $ID
+                    done
+                else
+                    nimbus-ctl -I -h easy-snapshot -m $(query nimbus podname) revert-snapshot $3
+                fi
                 ;;
 
             load-vc )
