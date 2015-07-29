@@ -56,22 +56,31 @@ case $1 in
                         test-vpx --vc-build=$VC_BUILD --esx-build=$ESX_BUILD --num-esx-hosts=2 --deploy-only
                         ;;
 
+
                     * )
                         echo "Options: changes, builds"
                         ;;
                 esac
                 ;;
 
+            snapshot )
+                nimbus-ctl -I -h easy-snapshot -m $(query nimbus podname) create-snapshot $3
+                ;;
+
+            revert )
+                nimbus-ctl -I -h easy-snapshot -m $(query nimbus podname) revert-snapshot $3
+                ;;
+
             load-vc )
                 # Loads the deployed vcenter server with the local build
                 # param 3: The Id of the vcenter instance to update (optional)
-                load-vc -I $(query nimbus ip vc $3) -i -p vmware
+                DBC_HOSTNAME=$(hostname) load-vc -I $(query nimbus ip vc $3) -i -p vmware
                 ;;
 
             fix-vc )
                 # Repairs the vc db so that load-vc can be run again
                 # param 3: The Id of the vcenter instance to update (optional)
-                ssh root@$(query nimbus ip vc $3) -e "/usr/sbin/vpxd -b"
+                ssh root@$(query nimbus ip vc $3) "/usr/sbin/vpxd -b && service vmware-vpxd start"
                 ;;
 
             ssh )

@@ -110,3 +110,8 @@ export SSH_AUTH_SOCK=$SSH_AUTH_SOCK_REDIRECT
 if [ -d /dbc/`hostname -s`/ ]; then
     export DBC_ENV=1
 fi
+
+# Look for perforce binary in local dir
+export P4CONFIG=.p4config
+
+export PYTHONPATH="/build/toolchain/noarch/vmware-pyvpx-5.5.0"

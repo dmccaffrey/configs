@@ -4,7 +4,8 @@ case $1 in
         case $2 in
             vim-stable )
                 # Gets the Id for the current stable vim-main build
-                curl -s https://devhub.eng.vmware.com/api/cat/latestStableCln | jq '.catRecommendedCLN | .["vim-main"] | .["vim-cat"]'
+                curl -s https://devhub.eng.vmware.com/api/cat/latestStableCln
+                #curl -s https://devhub.eng.vmware.com/api/cat/latestStableCln | jq '.catRecommendedCLN | .["vim-main"] | .["vim-cat"]'
                 ;;
 
             all )
@@ -79,7 +80,8 @@ case $1 in
                         else
                             ID=$4
                         fi
-                        query nimbus list | grep "\.vc\.$ID" | awk '{print $3}'
+                        ID=$(query nimbus list | grep "\.vc\.$ID" | awk '{print $3}')
+                        echo ${ID%?}
                         ;;
 
                     esx )
@@ -90,7 +92,8 @@ case $1 in
                         else
                             ID=$4
                         fi
-                        query nimbus list | grep "\.esx\.$ID" | awk '{print $3}'
+                        ID=$(query nimbus list | grep "\.esx\.$ID" | awk '{print $3}')
+                        echo ${ID%?}
                         ;;
                 esac
                 ;;
@@ -120,6 +123,16 @@ case $1 in
                         ;;
                 esac
                 ;;
+
+            podname )
+                ID=$(nimbus-ctl list | grep "\.vc\.0" | awk '{print $1}')
+                echo ${ID%?}
+                ;;
+
+            snapshots )
+                nimbus-ctl -m $(query nimbus podname) list-snapshot $3
+                ;;
+
         esac
         ;;
 
